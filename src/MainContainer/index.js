@@ -13,7 +13,7 @@ class MainContainer extends Component {
 
     getQuakes = async () => {
         try {
-            let url = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-01-01&endtime=2019-01-01T01:30:00';
+            let url = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-02-20&endtime=2019-02-20T01:30:00';
 
             const quakes = await fetch(url);
             if(!quakes.ok){
