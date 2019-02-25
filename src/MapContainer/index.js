@@ -17,24 +17,22 @@ export class MapContainer extends Component {
             selectedPlace: {}
         }
     }
-  
-
-    onMarkerClick = (props, marker, e) => {
+  onMarkerClick = (place, props, marker) => {
         this.setState({
             showingInfoWindow: true,
             activeMarker: marker,
-            selectedPlace: props
+            selectedPlace: place
         })
     }
 
     onClose = props => {
         if(this.state.showingInfoWindow) {
-            this.state({
+            this.setState({
                 showingInfoWindow: false,
                 activeMarker: null
-            })
+            });
         }
-    }
+    };
 
        
 
@@ -47,9 +45,9 @@ export class MapContainer extends Component {
             return(
                 <Marker key={i} 
                 position={{lat:quake.geometry.coordinates[1], lng:quake.geometry.coordinates[0]}}
-                icon={{url: "../../public/images/earthquake.png", anchor: new google.maps.Point(32,32),
+                icon={{url: "/images/earthquake.png", 
                 scaledSize: new google.maps.Size(32,32)}}
-                onClick={this.onMarkerClick}
+                onClick={this.onMarkerClick.bind(null, quake.properties.place)}
                 />
             )
         });
@@ -65,12 +63,7 @@ export class MapContainer extends Component {
                     lng: -97.74295
                 }}
             >
-            {/* <Marker
-                
-                onClick={this.onMarkerClick}
-                icon={{url:'/public/images/earthquake.png'}}
-                // name={'test'}
-            /> */}
+         
                 {quakesList}
 
                 <InfoWindow 
@@ -79,7 +72,7 @@ export class MapContainer extends Component {
                     onClose={this.onClose}
                 >
                     <div>
-                        <h4>{this.state.selectedPlace.name}</h4>
+                        <h4>{this.state.selectedPlace}</h4>
                     </div>
                 </InfoWindow>
             </Map>
