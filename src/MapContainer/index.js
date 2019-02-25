@@ -1,32 +1,59 @@
 import React, { Component } from 'react';
-import {Map, GoogleApiWrapper, Marker} from 'google-maps-react';
+import {Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 
 const mapStyles = {
-    height: '60%',
+    height: '100%',
     width:'40%',
-    // // size:'covr',
-    margin: '0',
-    padding: '50 px',
-    // display: 'block', 
-    // // // flexFlow: 'row nowrap'
-    // // position: 'relative'
-    // float:'left',
-    // width: '100%',
-    // height:'100%',
-    // "object-fit":'cover'
+    position:"relative"
 }
 
 export class MapContainer extends Component {
-    state={
-        activeMarker: {}
+
+    constructor(){
+        super();
+        this.state = {
+            showingInfoWindow: false,
+            activeMarker: {},
+            selectedPlace: {}
+        }
+    }
+  
+
+    onMarkerClick = (props, marker, e) => {
+        this.setState({
+            showingInfoWindow: true,
+            activeMarker: marker,
+            selectedPlace: props
+        })
     }
 
-    onMarkerClick = (marker, e) =>
-        this.setState({
-            activeMarker: marker
-        })
+    onClose = props => {
+        if(this.state.showingInfoWindow) {
+            this.state({
+                showingInfoWindow: false,
+                activeMarker: null
+            })
+        }
+    }
+
+       
+
 
     render(){
+
+        const {google} = this.props;
+      
+        const quakesList = this.props.quakes.features.map((quake, i) => {
+            return(
+                <Marker key={i} 
+                position={{lat:quake.geometry.coordinates[1], lng:quake.geometry.coordinates[0]}}
+                icon={{url: "../../public/images/earthquake.png", anchor: new google.maps.Point(32,32),
+                scaledSize: new google.maps.Size(32,32)}}
+                onClick={this.onMarkerClick}
+                />
+            )
+        });
+
         return(
             
             <Map
@@ -38,11 +65,23 @@ export class MapContainer extends Component {
                     lng: -97.74295
                 }}
             >
-            <Marker
+            {/* <Marker
                 
                 onClick={this.onMarkerClick}
+                icon={{url:'/public/images/earthquake.png'}}
                 // name={'test'}
-            />
+            /> */}
+                {quakesList}
+
+                <InfoWindow 
+                    marker={this.state.activeMarker} 
+                    visible={this.state.showingInfoWindow}
+                    onClose={this.onClose}
+                >
+                    <div>
+                        <h4>{this.state.selectedPlace.name}</h4>
+                    </div>
+                </InfoWindow>
             </Map>
         )
     }
@@ -53,4 +92,3 @@ export default GoogleApiWrapper({
 })(MapContainer);
 
 
-//btw, there is no magic way to fit map to its container, is it?

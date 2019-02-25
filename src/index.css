@@ -12,8 +12,9 @@
 
 .mapContainer {
   width: 40%;
-  padding-top: 2em; 
-  padding-left: 2em;
+  height: auto;
+  /* padding-top: 2em; 
+  padding-left: 2em; */
   background-color: lightblue;
 }
 
